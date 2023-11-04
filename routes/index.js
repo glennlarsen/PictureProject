@@ -1,7 +1,5 @@
 var express = require("express");
 var router = express.Router();
-const fs = require("fs");
-var path = require("path");
 const AWS = require("aws-sdk");
 const s3 = new AWS.S3();
 
@@ -27,7 +25,11 @@ router.get("/", async function (req, res, next) {
       };
     })
   );
-  res.render("index", { pictures: pictures, title: "Express" });
+  res.render("index", {
+    pictures: pictures,
+    title: "Express",
+    isAuthenticated: req.oidc.isAuthenticated(),
+  });
 });
 
 module.exports = router;

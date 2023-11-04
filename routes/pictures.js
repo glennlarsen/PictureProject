@@ -4,9 +4,10 @@ const fs = require("fs");
 var path = require("path");
 const AWS = require("aws-sdk");
 const s3 = new AWS.S3();
+const { requiresAuth } = require('express-openid-connect');
 
 /* GET pictures listing. */
-router.get("/", async (req, res, next) => {
+router.get("/", requiresAuth(), async (req, res, next) => {
   var params = {
     Bucket: process.env.CYCLIC_BUCKET_NAME,
     Delimiter: "/",
@@ -32,7 +33,7 @@ router.get("/", async (req, res, next) => {
   res.render("pictures", { pictures: pictures });
 });
 
-router.get("/:pictureName", async (req, res, next) => {
+router.get("/:pictureName", requiresAuth(), async (req, res, next) => {
   const pictureName = req.params.pictureName;
   var params = {
     Bucket: process.env.CYCLIC_BUCKET_NAME,
@@ -60,7 +61,7 @@ router.get("/:pictureName", async (req, res, next) => {
   res.render("pictures", { pictures: filteredPictures });
 });
 
-router.post("/", async function (req, res, next) {
+router.post("/", requiresAuth(), async function (req, res, next) {
   const file = req.files.file;
   console.log(req.files);
   await s3
