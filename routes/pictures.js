@@ -11,7 +11,7 @@ router.get("/", requiresAuth(), async (req, res, next) => {
   var params = {
     Bucket: process.env.CYCLIC_BUCKET_NAME,
     Delimiter: "/",
-    Prefix: "public/",
+    Prefix: req.oidc.user.email + '/'
   };
   var allObjects = await s3.listObjects(params).promise();
   var keys = allObjects?.Contents.map((x) => x.Key);
@@ -38,7 +38,7 @@ router.get("/:pictureName", requiresAuth(), async (req, res, next) => {
   var params = {
     Bucket: process.env.CYCLIC_BUCKET_NAME,
     Delimiter: "/",
-    Prefix: "public/",
+    Prefix: req.oidc.user.email + '/'
   };
   var allObjects = await s3.listObjects(params).promise();
   var keys = allObjects?.Contents.map((x) => x.Key);
@@ -68,7 +68,7 @@ router.post("/", requiresAuth(), async function (req, res, next) {
     .putObject({
       Body: file.data,
       Bucket: process.env.CYCLIC_BUCKET_NAME,
-      Key: "public/" + file.name,
+      Key: req.oidc.user.email + "/" + file.name,
     })
     .promise();
   res.end();
