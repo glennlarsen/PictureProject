@@ -56,7 +56,7 @@ router.get("/:pictureName", async (req, res, next) => {
       };
     })
   );
-  const filteredPictures = pictures.filter((pic) => pic === pictureName);
+  const filteredPictures = pictures.filter((pic) => pic.name === pictureName);
   res.render("pictures", { pictures: filteredPictures });
 });
 
